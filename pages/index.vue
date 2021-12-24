@@ -27,11 +27,14 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .container {
   margin: 0 auto;
   background: #E5E5E5;
   display: flex;
   padding: 32px;
+  @media (max-width: 768px) { 
+    flex-direction: column;
+  }
 }
 </style>

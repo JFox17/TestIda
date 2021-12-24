@@ -27,11 +27,13 @@
         v-for="(card, i) in cards"
         :key="i"
       >
+      <div class="cards__frame">
         <img
           class="cards__img"
           :src="card.img"
           alt="картинка"
         >
+      </div>
         <div class="cards__block">
           <h4 class="cards__name">{{card.name}}</h4>
           <p class="cards__description">{{card.description}}</p>
@@ -229,7 +231,8 @@ export default {
     cursor: pointer;
   }
   &__img {
-    max-width: 100%;
+    width: 100%;
+    height: 100%;
     border-radius: 4px 4px 0px 0px;
   }
   &__name {
@@ -273,6 +276,9 @@ export default {
     visibility: visible;
     transition: .55s opacity, .55s visibility;
   }
+  &__frame {
+    height: 200px;
+  }
 }
 .sort {
   font-weight: normal;
@@ -310,6 +316,7 @@ export default {
     li:hover {
       background: #e5e5e573;
       transition: 0.5s;
+      color: black;
     }
   }
   &__list-active {
