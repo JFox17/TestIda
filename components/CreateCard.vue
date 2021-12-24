@@ -32,3 +32,8 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  .create-cards {
+    width: 200px;
+  }
+</style>
