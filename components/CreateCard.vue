@@ -152,7 +152,7 @@ export default {
         this.price=''
       }
     }
-  }
+  },
 }
 </script>
 <style lang="scss">
@@ -279,5 +279,6 @@ export default {
       }
     }
   }
+ 
   
 </style>

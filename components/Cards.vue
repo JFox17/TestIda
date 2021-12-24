@@ -63,6 +63,7 @@ export default {
       price: '',
       isOpen: false,
       select: 'По умолчанию',
+      isReady: false,
       cards: [
         {
           img: 'https://www.ptichka.ru/data/cache/2018jan/13/57/49869_74018.jpg',
@@ -142,6 +143,11 @@ export default {
     }
   },
   methods: {
+    ready() {
+      this.$emit('ready', {
+        ready: this.isReady
+      })
+    },
     openList() {
       if(this.isOpen === true) {
         this.isOpen = false
@@ -206,7 +212,11 @@ export default {
         this.copyCards.unshift(val)
       }
     }
-  }
+  },
+  created() {
+		this.isReady = true
+    this.ready()
+	},
 }
 </script>
 <style lang="scss">
