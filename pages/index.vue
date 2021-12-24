@@ -2,6 +2,8 @@
   <div class="container">
     <div>
       <Logo />
+      <create-card :onCard="onCard" />
+      <cards :newCard="newCard" />
       <h1 class="title">
         TestIda
       </h1>
@@ -28,7 +30,25 @@
 </template>
 
 <script>
-export default {}
+import Cards from '../components/Cards.vue'
+import CreateCard from '../components/CreateCard.vue'
+export default {
+  components: { 
+    CreateCard,
+    Cards 
+  },
+  data() {
+    return {
+      newCard: '',
+    }
+  },
+  methods: {
+    onCard(date) {
+      this.newCard = date
+      console.log(date)
+    }
+  }
+}
 </script>
 
 <style>
