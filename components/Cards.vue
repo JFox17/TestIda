@@ -213,13 +213,16 @@ export default {
 .wrap {
   font-family: Source Sans Pro;
   font-style: normal;
+  @media (max-width: 768px) {
+    margin-top: 20px;
+  }
 }
 .cards {
   color: #3F3F3F;
   text-align: left;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
 
   &__container {
     max-width: 332px;
@@ -229,6 +232,9 @@ export default {
     border-radius: 4px;
     position: relative;
     cursor: pointer;
+    @media (max-width: 768px) {
+      max-width: 280px;
+    }
   }
   &__img {
     width: 100%;

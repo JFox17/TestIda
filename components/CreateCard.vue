@@ -176,12 +176,14 @@ export default {
       border-radius: 4px;
       margin: 16px 16px 0 0;
       padding: 24px;
-      @media (max-width: 768px) { 
+      @media (min-width: 280px) and (max-width: 768px) {
         flex-wrap: wrap;
         display: flex;
         flex-direction: column;
-        max-height: 330px;
         justify-content: center;
+      }
+      @media (min-width: 420px) and (max-width: 768px) { 
+        max-height: 330px;
       }
     }
     &__field{
@@ -202,6 +204,12 @@ export default {
       overflow: auto;
       transition: 0.7s;
       border: 1px solid #FFFEFB;
+      @media (max-width: 768px) { 
+        padding: 10px 0 0px 8px;
+        min-height: 32px;
+        font-size: 10px;
+        line-height: 15px;
+      }
       &:focus {
         background: rgb(211 211 211 / 20%);
         border: 1px solid rgb(211 211 211 / 20%);
