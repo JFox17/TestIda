@@ -1,17 +1,24 @@
 <template>
   <div class="wrap">
     <div class="sort">
-      <button class="sort__field" @click="openList"> По умолчанию 
+      <button class="sort__field" @click="openList"> {{ this.select }}
         <span>
-          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6" fill="none">
+          <svg  :class="[isOpen ? 'sort__arrow-active' : 'sort__arrow' ]" xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6" fill="none">
             <path d="M7.48532 1.24264L4.24268 4.48528L1.00003 1.24264" stroke="#B4B4B4"/>
           </svg>
         </span>
       </button>
       <ul class="sort__list" :class="[isOpen ? 'sort__list-active' : '' ]">
-        <li @click="sortByMinPrice()" :class="[activeMin ? 'sort__list-active' : '' ]">По цене min</li>
-        <li @click="sortByMaxPrice()" :class="[activeMax ? 'sort__list-active' : '' ]">По цене max</li>
-        <li @click="sortByName()" :class="[activeName ? 'sort__list-active' : '' ]">По наименованию</li>
+        <li @click="sortByBase()" >По умолчанию 
+          <span >
+          <svg :class="[isOpen ? 'sort__arrow-active' : 'sort__arrow' ]" xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6" fill="none">
+            <path d="M7.48532 1.24264L4.24268 4.48528L1.00003 1.24264" stroke="#B4B4B4"/>
+          </svg>
+        </span>
+        </li>
+        <li @click="sortByMinPrice()">По цене min</li>
+        <li @click="sortByMaxPrice()">По цене max</li>
+        <li @click="sortByName()">По наименованию</li>
       </ul>
     </div>
     <div class="cards">
@@ -52,10 +59,8 @@ export default {
       name: '',
       description: '',
       price: '',
-      activeMin: false,
-      activeMax: false,
-      activeName: false,
       isOpen: false,
+      select: 'По умолчанию',
       cards: [
         {
           img: 'https://www.ptichka.ru/data/cache/2018jan/13/57/49869_74018.jpg',
@@ -145,62 +150,51 @@ export default {
     },
     removeCard(card) {
       this.cards.splice(card, 1)
+      this.copyCards.splice(card, 1)
+    },
+    sortByBase() {
+      this.cards = this.copyCards
+      this.select = 'По умолчанию'
+      this.isOpen = false
     },
     sortByMinPrice() {
-      console.log(this.copyCards)
-      if (this.activeMin === true) {
-        this.activeMin = false
-        this.cards = this.copyCards
-      } else {
-        this.cards = this.copyCards
-        this.activeMin = true
-        this.activeMax = false
-        this.activeName = false
-        const temp = JSON.parse(JSON.stringify(this.cards))
+      this.cards = this.copyCards
+      const temp = JSON.parse(JSON.stringify(this.cards))
 
-        temp.forEach(element => {
-          element.price = +element.price.replace(/\D/g, '')
-        });
+      temp.forEach(element => {
+        element.price = +element.price.replace(/\D/g, '')
+      });
 
-        temp.sort((a, b) => a.price - b.price)
-        this.cards = temp
-      }
+      temp.sort((a, b) => a.price - b.price)
+      this.cards = temp
+      this.select = 'По цене min'
+      this.isOpen = false
+      
     },
     sortByMaxPrice() {
-      if (this.activeMax === true) {
-        this.activeMax = false
-        this.cards = this.copyCards
-      } else {
-        this.cards = this.copyCards
-        this.activeMin = false
-        this.activeMax = true
-        this.activeName = false
+      this.cards = this.copyCards
 
-        const temp = JSON.parse(JSON.stringify(this.cards))
+      const temp = JSON.parse(JSON.stringify(this.cards))
 
-        temp.forEach(element => {
-          element.price = +element.price.replace(/\D/g, '')
-        });
+      temp.forEach(element => {
+        element.price = +element.price.replace(/\D/g, '')
+      });
 
-        temp.sort((a, b) => b.price - a.price)
-        this.cards = temp
-      }
+      temp.sort((a, b) => b.price - a.price)
+      this.cards = temp
+      this.select = 'По цене max'
+      this.isOpen = false
+      
     },
     sortByName() {
-      if (this.activeName === true) { 
-        this.activeName = false
-        this.cards = this.copyCards
-      } else {
-        this.cards = this.copyCards
-        this.activeMin = false
-        this.activeMax = false
-        this.activeName = true
+      this.cards = this.copyCards
 
-        const temp = JSON.parse(JSON.stringify(this.cards))
+      const temp = JSON.parse(JSON.stringify(this.cards))
 
-        temp.sort((a, b) => a.name > b.name ? 1: -1)
-        this.cards = temp
-      }
+      temp.sort((a, b) => a.name > b.name ? 1: -1)
+      this.cards = temp
+      this.select = 'По наименованию'
+      this.isOpen = false
     }
   },
   watch: {
@@ -223,11 +217,11 @@ export default {
   text-align: left;
   display: flex;
   flex-wrap: wrap;
-  align-items: space-around;
+  justify-content: space-between;
 
   &__container {
     max-width: 332px;
-    margin: 16px;
+    margin: 8px 0;
     background: #FFFEFB;
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02);
     border-radius: 4px;
@@ -285,21 +279,22 @@ export default {
   font-size: 12px;
   line-height: 15px;
   color: #B4B4B4;
-  max-width: 120px;
   cursor: pointer;
   position: relative;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
 
   &__field {
     background: #FFFEFB;
     border-radius: 4px;
-    padding: 10px 16px;
+    padding: 10px 0;
+    min-width: 130px;
   }
   &__list {
     background: #FFFEFB;
     color: #B4B4B4;
     list-style: none;
-    margin-top: -2px;
-    padding-top: 2px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
     transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
     position: absolute;
@@ -307,8 +302,10 @@ export default {
     overflow:hidden;
     transition: max-height 0.8s linear;
     z-index: 1;
+    top: 1px;
+    border-radius: 4px;
     li {
-      padding: 5px 10px;
+      padding: 10px 16px;
     }
     li:hover {
       background: #e5e5e573;
@@ -317,6 +314,14 @@ export default {
   }
   &__list-active {
     max-height:300px;
+  }
+  &__arrow-active {
+    transition: transform .8s ease-in-out;
+    transform: rotate(180deg);
+  }
+  &__arrow {
+    transition: transform .8s ease-in-out;
+    transform: rotate(0deg);
   }
 }
 </style>
