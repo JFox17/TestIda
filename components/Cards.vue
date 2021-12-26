@@ -22,17 +22,21 @@
       </ul>
     </div>
     <div class="cards">
+      <transition-group name="list-complete" tag="div" class="cards__transition">
       <div
         class="cards__container"
         v-for="(card, i) in cards"
         :key="i"
       >
       <div class="cards__frame">
-        <img
-          class="cards__img"
-          :src="card.img"
-          alt="картинка"
-        >
+        <transition name="fade">
+          <img
+            class="cards__img"
+            :src="card.img"
+            alt="картинка"
+            v-if="isReady"
+          >
+        </transition>
       </div>
         <div class="cards__block">
           <h4 class="cards__name">{{card.name}}</h4>
@@ -50,6 +54,7 @@
           </svg>
         </div>
       </div>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -147,6 +152,25 @@ export default {
       this.$emit('ready', {
         ready: this.isReady
       })
+      if(process.client) {
+        if (localStorage.getItem('data') === null) {
+          const data = this.cards
+          localStorage.setItem('data', JSON.stringify(data))
+
+          const select =this.select
+          localStorage.setItem('select', JSON.stringify(select))
+        } else {
+          let b = localStorage.getItem('data')
+          b = JSON.parse(b)
+          this.cards = b
+
+          let a = localStorage.getItem('select')
+          a = JSON.parse(a)
+          this.select = a
+        }
+      }
+       
+      
     },
     openList() {
       if(this.isOpen === true) {
@@ -157,13 +181,23 @@ export default {
       
     },
     removeCard(card) {
-      this.cards.splice(card, 1)
-      this.copyCards.splice(card, 1)
+      let cards = this.cards
+      let index = cards.indexOf(card)
+
+      this.cards.splice(index, 1)
+      this.copyCards.splice(index, 1)
+
+      const data = this.cards
+      localStorage.setItem('data', JSON.stringify(data))
     },
     sortByBase() {
       this.cards = this.copyCards
       this.select = 'По умолчанию'
       this.isOpen = false
+      const data = this.cards
+      localStorage.setItem('data', JSON.stringify(data))
+      const select = this.select
+      localStorage.setItem('select', JSON.stringify(select))
     },
     sortByMinPrice() {
       this.cards = this.copyCards
@@ -174,9 +208,18 @@ export default {
       });
 
       temp.sort((a, b) => a.price - b.price)
+
+      temp.forEach(element => {
+        element.price = element.price + ' руб.'
+      });
+
       this.cards = temp
       this.select = 'По цене min'
       this.isOpen = false
+      const data = this.cards
+      localStorage.setItem('data', JSON.stringify(data))
+      const select = this.select
+      localStorage.setItem('select', JSON.stringify(select))
       
     },
     sortByMaxPrice() {
@@ -189,9 +232,18 @@ export default {
       });
 
       temp.sort((a, b) => b.price - a.price)
+
+      temp.forEach(element => {
+        element.price = element.price + ' руб.'
+      });
+
       this.cards = temp
       this.select = 'По цене max'
       this.isOpen = false
+      const data = this.cards
+      localStorage.setItem('data', JSON.stringify(data))
+      const select = this.select
+      localStorage.setItem('select', JSON.stringify(select))
       
     },
     sortByName() {
@@ -200,9 +252,14 @@ export default {
       const temp = JSON.parse(JSON.stringify(this.cards))
 
       temp.sort((a, b) => a.name > b.name ? 1: -1)
+
       this.cards = temp
       this.select = 'По наименованию'
       this.isOpen = false
+      const data = this.cards
+      localStorage.setItem('data', JSON.stringify(data))
+      const select = this.select
+      localStorage.setItem('select', JSON.stringify(select))
     }
   },
   watch: {
@@ -210,6 +267,9 @@ export default {
       handler (val) {
         this.cards.unshift(val)
         this.copyCards.unshift(val)
+
+        const data = this.cards
+        localStorage.setItem('data', JSON.stringify(data))
       }
     }
   },
@@ -223,6 +283,7 @@ export default {
 .wrap {
   font-family: Source Sans Pro;
   font-style: normal;
+  width: 100%;
   @media (max-width: 768px) {
     margin-top: 20px;
   }
@@ -230,18 +291,22 @@ export default {
 .cards {
   color: #3F3F3F;
   text-align: left;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  
+  &__transition {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
 
   &__container {
-    max-width: 332px;
+    width: 332px;
     margin: 8px 0;
     background: #FFFEFB;
     box-shadow: 0px 20px 30px rgba(0, 0, 0, 0.04), 0px 6px 10px rgba(0, 0, 0, 0.02);
     border-radius: 4px;
     position: relative;
     cursor: pointer;
+    transition: 0.7s;
     @media (max-width: 768px) {
       max-width: 280px;
     }
@@ -346,5 +411,36 @@ export default {
     transition: transform .8s ease-in-out;
     transform: rotate(0deg);
   }
+}
+// .list-complete-item {
+//   transition: all 1s;
+//   display: inline-block;
+//   margin-right: 10px;
+// }
+// .list-complete-enter, .list-complete-leave-to {
+//   opacity: 0;
+//   transform: translateX(-30px);
+// }
+// .list-complete-leave-active {
+//   position: absolute;
+// }
+.list-complete-enter-active,
+.list-complete-leave-active {
+  transition:  all 1s ease;
+}
+.list-complete-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+.list-complete-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>

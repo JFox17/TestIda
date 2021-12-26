@@ -1,10 +1,12 @@
 <template>
-  <div class="container">
-    <create-card :onCard="onCard" />
-    <div class="lds-roller" :class="[isReady ? 'loader' : '']">
-      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+  <div class="unite">
+    <div class="unite__container">
+      <create-card :onCard="onCard" />
+      <div class="lds-roller" :class="[isReady ? 'loader' : '']">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+      </div>
+      <cards :newCard="newCard" @ready="onReady" :class="[isReady ? '' : 'loader']"/>
     </div>
-    <cards :newCard="newCard" @ready="onReady" :class="[isReady ? '' : 'loader']"/>
   </div>
 </template>
 
@@ -27,7 +29,6 @@ export default {
       this.newCard = date
     },
     onReady(date) {
-      console.log(date)
       this.isReady = date
     }
   }
@@ -35,15 +36,19 @@ export default {
 </script>
 
 <style lang="scss">
-.container {
-  margin: 0 auto;
+.unite {
   background: #E5E5E5;
-  display: flex;
-  padding: 32px;
-  @media (max-width: 768px) { 
-    flex-direction: column;
+  &__container {
+    margin: 0 auto;
+    display: flex;
+    padding: 32px;
+    max-width: 1200px;
+    @media (max-width: 768px) { 
+      flex-direction: column;
+    }
   }
 }
+
 .loader {
   display: none !important;
 }

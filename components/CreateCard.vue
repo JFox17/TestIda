@@ -51,7 +51,7 @@
             @input="validatePrice"
             v-mask="mask"
           />
-          <span :class="[isErrorPrice ? 'create-cards__text-error' : '']" class="create-cards__text">Поле является обязательным</span>
+          <span :class="[isErrorPrice ? 'create-cards__text-error' : '']" class="create-cards__text">{{errorText}}</span>
         </div>
         <button
           @click="addCard"
@@ -74,6 +74,7 @@ export default {
       description: '',
       price: '',
       isErrorName: false,
+      errorText: '',
       isErrorImg: false,
       isErrorPrice: false,
       isValid: false,
@@ -108,25 +109,26 @@ export default {
       }
     },
     validatePrice() {
-      console.log(this.price.length)
-      if (this.price.length < 2 && this.price.length < 6) {
-        this.mask = "#руб."
-      } else if (this.price.length > 4 && this.price.length < 6) {
-        this.mask = "##руб."
-      } else if (this.price.length > 5 && this.price.length < 7 ) {
-        this.mask = "###руб."
-      } else if(this.price.length > 7 && this.price.length < 9) {
-        this.mask = "# ###руб."
-      } else if (this.price.length > 9 && this.price.length < 11) {
-        this.mask = "## ###руб."
-      } else if (this.price.length > 10 && this.price.length < 12) {
-        this.mask = "### ###руб."
+      if (this.price.length < 6) {
+        this.mask = "## руб."
+      } else if (this.price.length > 6 && this.price.length < 9) {
+        this.mask = "### руб."
+      } else if (this.price.length > 7 && this.price.length < 11) {
+        this.mask = "# ### руб."
+      } else if (this.price.length > 9 && this.price.length < 12) {
+        this.mask = "## ### руб."
+      } else if (this.price.length > 10 && this.price.length < 13) {
+        this.mask = "### ### руб."
       } else if (this.price.length > 11) {
-        this.mask = "# ### ###руб."
+        this.mask = "# ### ### руб."
       }
 
       if (this.price === '') {
         this.isErrorPrice = true
+        this.errorText = 'Поле является обязательным'
+      } else if (this.price < 2) {
+        this.isErrorPrice = true
+        this.errorText = 'Цена должна быть от 10руб.'
       } else {
         this.isErrorPrice = false
       }
@@ -214,9 +216,13 @@ export default {
         background: rgb(211 211 211 / 20%);
         border: 1px solid rgb(211 211 211 / 20%);
       }
+      &:hover {
+        background: rgb(211 211 211 / 20%);
+        border: 1px solid rgb(211 211 211 / 20%);
+      }
     }
     &__field-error {
-      border: 1px solid #FF8484;
+      border: 1px solid #FF8484 !important;
     }
     &__name {
       font-weight: normal;
