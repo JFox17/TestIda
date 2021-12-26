@@ -25,18 +25,15 @@
       <transition-group name="list-complete" tag="div" class="cards__transition">
       <div
         class="cards__container"
-        v-for="(card, i) in cards"
-        :key="i"
+        v-for="card in cards"
+        :key="card.price"
       >
       <div class="cards__frame">
-        <transition name="fade">
-          <img
-            class="cards__img"
-            :src="card.img"
-            alt="картинка"
-            v-if="isReady"
-          >
-        </transition>
+        <img
+          class="cards__img"
+          :src="card.img"
+          alt="картинка"
+        >
       </div>
         <div class="cards__block">
           <h4 class="cards__name">{{card.name}}</h4>
